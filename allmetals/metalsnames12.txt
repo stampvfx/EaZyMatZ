@@ -1,0 +1,12 @@
+Copper 
+Chrome
+Kevlar
+DarkMetal
+Aluminium
+AnodizedMetal
+StainlessSteel
+StainlessSteel2
+Copper 2
+Copper 3
+Brass 1
+Brass 2
