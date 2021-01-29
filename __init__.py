@@ -10,111 +10,227 @@ bl_info = {
     }
 import bpy
 import os
+from bpy.types import Menu, Operator, Panel, AddonPreferences, PropertyGroup
+from bpy.props import StringProperty, FloatProperty, BoolProperty, IntProperty, EnumProperty
 class MainPanel(bpy.types.Panel):
-    bl_label = "Basic Materials"
+    bl_label = "EaZyMatZ"
     bl_idname = "MainPanel_PT_MainPanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "EaZyMatZ"
-
-    def draw(self, context):
+    def draw_header(self, context):
+        pcoll = preview_collections["main"]
+        logo = pcoll["logo"]
         layout = self.layout
-
-        row = layout.row()
-        row.operator('shader.wood_operator', text="Wood")
-        row = layout.row()
-        row.operator('shader.ocean_operator', text="Ocean")
-        row = layout.row()
-        row.operator('shader.car_operator', text="CarPaint")
-        row = layout.row()
-        row.operator('shader.asphalt1_operator', text="Asphalt Basic")
-        row.operator('shader.asphaltadvanced_operator', text="Asphalt Advanced")
-        row = layout.row()
-        row.operator('shader.spongebasic_operator', text='Sponge Basic')
-        row.operator('shader.advancedsponge_operator', text='Sponge Advanced')
-
-        
-        
-        
-class METALPANEL(bpy.types.Panel):
-    bl_label = "Metals"
-    bl_idname = "METALPANEL_PT_MainPanel"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = "EaZyMatZ"
-
+        layout.label(icon_value=logo.icon_id)
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.operator('shader.dentedmetal_operator', text='Dented Metal')
+        scene = context.scene
+        mytool = scene.my_tool
+        row.prop(mytool, "choose")
         row = layout.row()
-        row.operator('shader.copp_operator', text='Copper')
-        row.operator('shader.copp2_operator', text='Copper 2')
-        row.operator('shader.copp3_operator', text='Copper 3')
-        row = layout.row()
-        row.operator('shader.brass_operator', text='Brass')
-        row.operator('shader.brass2_operator', text='Brass 2')
-        row = layout.row()
-        row.operator('shader.ss_operator', text='Stainless Steel')
-        row.operator('shader.ss2_operator', text='Stainless Steel 2')
-        row = layout.row()
-        row.operator('shader.chr_operator', text='Chrome')
-        row = layout.row()
-        row.operator('shader.darkmet_operator', text='Dark Metal')
-        row = layout.row()
-        row.operator('shader.alim_operator', text='Aluminium')
-        row = layout.row()
-        row.operator('shader.am_operator', text='AnodizedMetal')
-        row = layout.row()
-        row.operator('shader.kev_operator', text='Kevlar')
-        row = layout.row()
-        row.operator('shader.gm_operator', text='Ground metal')
+        if mytool.choose == 'UNCATEGORIZED':
+            row.prop(mytool, "Uncategorized")
+            row = layout.row()
+            if mytool.Uncategorized == 'OP1':
+                row.operator('shader.ocean_operator', text="Add Ocean Shader")
+            row = layout.row()
+            if mytool.Uncategorized == 'OP2':
+                row.operator('shader.car_operator', text="Add car paint")
+            row = layout.row()
+            if mytool.Uncategorized == 'OP3':
+                row.operator('shader.asphalt1_operator', text="Add Asphalt 1")
+            if mytool.Uncategorized == 'OP4':
+                row.operator('shader.asphaltadvanced_operator', text="Add Asphalt Advanced")
+            row = layout.row()
+            if mytool.Uncategorized == 'OP5':
+                row.operator('shader.spongebasic_operator', text='Add Sponge Basic')
+        if mytool.choose == 'METAL':
+            row.prop(mytool, "Metal")
+            row = layout.row()
+            if mytool.Metal == 'OP1':
+                row.operator('shader.dentedmetal_operator', text='Add Dented Metal')
+            if mytool.Metal == 'OP2':
+                row.operator('shader.mm1_operator', text='Add Metal')
+            if mytool.Metal == 'OP3':
+                row.operator('shader.copp_operator', text='Add Copper')
+            if mytool.Metal == 'OP4':
+                row.operator('shader.copp2_operator', text='Add Copper 2')
+            if mytool.Metal == 'OP5': 
+                row.operator('shader.copp3_operator', text='Add Copper 3')
+            if mytool.Metal == 'OP6':
+                row.operator('shader.brass_operator', text='Add Brass')
+            if mytool.Metal == 'OP7':
+                row.operator('shader.brass2_operator', text='Add Brass 2')
+            if mytool.Metal == 'OP8':
+                row.operator('shader.ss_operator', text='Add Stainless Steel')
+            if mytool.Metal == 'OP9':
+                row.operator('shader.ss2_operator', text='Add Stainless Steel 2')
+            if mytool.Metal == 'OP10':
+                row.operator('shader.chr_operator', text='Add Chrome')
+            if mytool.Metal == 'OP11':
+                row.operator('shader.darkmet_operator', text='Add Dark Metal')
+            if mytool.Metal == 'OP12':
+                row.operator('shader.alim_operator', text='Add Aluminium')
+            if mytool.Metal == 'OP13':
+                row.operator('shader.am_operator', text='Add AnodizedMetal')
+            if mytool.Metal == 'OP14':
+                row.operator('shader.kev_operator', text='Add Kevlar')
+            if mytool.Metal == 'OP15':
+                row.operator('shader.gm_operator', text='Add Ground metal')
+            if mytool.Metal == 'OP16':
+                row.operator('shader.bm_ot', text='Add Brushed Metal')
+        if mytool.choose == 'FABRIC':
+            row.prop(mytool, 'Fabric')
+            row = layout.row()
+            if mytool.Fabric == 'OP1':
+                row.operator('shader.satinfabric_operator', text='Add Fabric Satin')
+            if mytool.Fabric == 'OP2':
+                row.operator('shader.satinfabric2_operator', text='Add Fabric Satin 2')
+            if mytool.Fabric == 'OP3':
+                row.operator('shader.upholstery_operator', text='Add Fabric UpHolstery')
+            if mytool.Fabric == 'OP4':
+                row.operator('shader.upholstery2_operator', text='Add Fabric UpHolstery 2')
+            if mytool.Fabric == 'OP5':
+                row.operator('shader.upholstery3_operator', text='Add Fabric UpHolstery 3')
+            if mytool.Fabric == 'OP6':
+                row.operator('shader.silk_operator', text='Add Fabric Silk')
+            if mytool.Fabric == 'OP7':
+                row.operator('shader.silk2_operator', text='Add Fabric Silk 2')
+            if mytool.Fabric == 'OP8':
+                row.operator('shader.crushed_operator', text='Add Crushed Fabric')
+            if mytool.Fabric == 'OP9':
+                row.operator('shader.crushed2_operator', text='Add Crushed Fabric 2')
+            if mytool.Fabric == 'OP10':
+                row.operator('shader.leather_operator', text='Add Leather')
+            if mytool.Fabric == 'OP11':
+                row.operator('shader.felt_operator', text='Add Fabric Felt')
+            if mytool.Fabric == 'OP12':
+                row.operator('shader.st_operator', text='Add Fabric Semi Transparent')
+            if mytool.Fabric == 'OP13':
+                row.operator('shader.leth2_operator', text='Add Fabric Leather 2')
+        if mytool.choose == 'WOOD':
+            row.prop(mytool, 'Wood')
+            row = layout.row()
+            if mytool.Wood == 'OP1':
+                row.label(text="This only work with blender 2.83 and above for now :)")
+                row = layout.row()
+                row.operator('shader.wood_operator', text="Wood (BETA)")
+            if mytool.Wood == 'OP2':
+                row.operator('shader.gw1_operator', text="Ground Wood")
+
+ 
+
  
  
+
+
+
+def update_enum(self, context):
+    # self = current scene in an EnumProperty callback!
+    print(self.Uncategorized)
+    eval('bpy.ops.%s()' % self.my_enum)
+#propgroup
+class Props(PropertyGroup):
+    choose : EnumProperty(
+        name= "Categories",
+        description="Choose a category",
+        items= [("UNCATEGORIZED", "Uncategorized", ""),
+                ("METAL", "Metal", ""),
+                ("FABRIC", "Fabrics", ""),
+                ("WOOD", "Wood", "")
+        ]
+    )
+    Uncategorized : EnumProperty(
+        name= "Uncategorized Materials",
+        description="Please Choose a material",
+        items= [('OP1', "Ocean", ""),
+        ("OP2", "Car paint", ""),
+        ("OP3", "Asphalt 1 (Basic)", ""),
+        ("OP4", "Asphalt 2", ""),
+        ("OP5", "Sponge", "")
+        ],
+        update=update_enum
+    )
+    Metal : EnumProperty(
+        name="Metal Materials",
+        description = "Choose a material!",
+        items= [("OP1", "Dented Metal", ""),
+                ("OP2", "Metal", ""),
+                ("OP3", "Copper", ""),
+                ("OP4", "Copper 2", ""),
+                ("OP5", "Copper 3", ""),
+                ("OP6", "Brass", ""),
+                ("OP7", "Brass 2", ""),
+                ("OP8", "Stainless Steel", ""),
+                ("OP9", "Stainless Steel 2", ""),
+                ("OP10", "Chrome", ""),
+                ("OP11", "Dark Metal", ""),
+                ("OP12", "Aluminum", ""),
+                ("OP13", "Anodized Metal", ""),
+                ("OP14", "Kevlar", ""),
+                ("OP15", "Ground Metal", ""),
+                ('OP16', "Brushed Metal", "")
+
+        ]
+    )
+    Fabric : EnumProperty(
+        name="Fabric Materials",
+        description= "Choose a materials!!",
+        items= [('OP1', "Fabric Satin", ""),
+                ('OP2', "Fabric Satin 2", ""),
+                ('OP3', "Fabric UpHolstery", ""),
+                ('OP4', "Fabric UpHolstery 2", ""),
+                ('OP5', "Fabric UpHolstery 3", ""),
+                ('OP6', "Fabric Silk", ""),
+                ('OP7', "Fabric Silk 2", ""),
+                ('OP8', "Crushed Fabric", ""),
+                ('OP9', "Crushed Fabric 2", ""),
+                ('OP10', "Leather", ""),
+                ('OP11', "Fabric Felt", ""),
+                ('OP12', "Fabric Semi Transparent", ""),
+                ('OP13', "Leather 2", "")
+        ]
+    )
+    Wood : EnumProperty(
+        name="Wood Materials",
+        description= " Choose a material",
+        items= [('OP1', "Wood (Beta)", ""),
+                ('OP2', "Ground Wood", "")
+        ]       
+    )
+
+
  
+
  
- 
-class FABRICPANEL(bpy.types.Panel):
-    bl_label = "Fabric"
-    bl_idname = "FABRICPANEL_PT_MainPanel"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = "EaZyMatZ"
+        
+class AddonPreferences(AddonPreferences):
+    bl_idname = __name__
+
 
     def draw(self, context):
         layout = self.layout
         row = layout.row()
-        row.operator('shader.satinfabric_operator', text='Fabric Satin')
-        row.operator('shader.satinfabric2_operator', text='Fabric Satin 2')
+        pcoll = preview_collections["main"]
+        my_icon = pcoll["my_icon"]
+        row.label(text="Thanks for using EaZyMatZ!")
         row = layout.row()
-        row.operator('shader.upholstery_operator', text='Fabric UpHolstery')
-        row.operator('shader.upholstery2_operator', text='Fabric UpHolstery 2')
-        row.operator('shader.upholstery3_operator', text='Fabric UpHolstery 3')
-        row = layout.row()
-        row.operator('shader.silk_operator', text='Fabric Silk')
-        row.operator('shader.silk2_operator', text='Fabric Silk 2')
-        row = layout.row()
-        row.operator('shader.crushed_operator', text='Crushed Fabric')
-        row.operator('shader.crushed2_operator', text='Crushed Fabric 2')
-        row = layout.row()
-        row.operator('shader.leather_operator', text='Fabric Leather')
-        row = layout.row()
-        row.operator('shader.felt_operator', text='Fabric Felt')
-        row = layout.row()
-        row.operator('shader.st_operator', text='Fabric Semi Transparent')
-        row = layout.row()
-        row.operator('shader.leth2_operator', text='Fabric Leather 2')
-    
- 
+        row.label(text="For any help, requests or bug report please join discord by clicking on discord icon")
+        row.operator('addon.prefs_ot', icon_value=my_icon.icon_id)
 
- 
+preview_collections = {}
 
-     
-        
+class addon_prefs_ot(Operator):
+    bl_idname = "addon.prefs_ot"
+    bl_label = ""
+    bl_options = {'REGISTER', 'UNDO'}
 
-     
-        
-        
+    def execute(self, context):
+        bpy.ops.wm.url_open(url="https://discord.gg/q9cBySWXuM")
+
+        return {'FINISHED'} 
 
 #WoodShaderOperator
 class MATZOTWOOD(bpy.types.Operator):
@@ -278,33 +394,11 @@ class MATZOTCAR(bpy.types.Operator):
         material_car.node_tree.links.new(colorrampcar_node.outputs[0], BSDF.inputs[0])
         material_car.node_tree.links.new(layerweightcar_node.outputs[1], colorrampcar_node.inputs[0])
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    
         
         bpy.context.object.active_material = material_car
         
         return {'FINISHED'}
-    
-    
-    
     
     
     
@@ -570,23 +664,8 @@ class MATZOTDENTEDMETAL(bpy.types.Operator):
               bpy.ops.wm.append(filename=filename, directory=directory)
              
             
-            
-        
-        
-     
                         
           return{'FINISHED'}
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
       
       
       
@@ -638,12 +717,7 @@ class MATZOTFABRICSATIN2(bpy.types.Operator):
         
           for obj in objects:
               filename = obj
-              bpy.ops.wm.append(filename=filename, directory=directory)
-       
-        
-        
-     
-                        
+              bpy.ops.wm.append(filename=filename, directory=directory)  
           return{'FINISHED'}
       
       
@@ -1315,36 +1389,79 @@ class MATZOTGM(bpy.types.Operator):
        
        
          
-       
-       
-       
-       
-       
-       
-         
-       
-       
-       
-       
-       
-       
-         
-       
-       
-       
-       
+metal_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'allmetals', 'metal.blend') 
+class MATZOTMM__M1(bpy.types.Operator):
+       bl_idname = 'shader.mm1_operator'
+       bl_label =  'Assign metal Material'
+      
+       def execute(self, context):
+
+           section = "\\Material\\"
+                
+           objects = ["Metal"] 
+        
+           directory = metal_file + section 
+        
+           for obj in objects:
+               filename = obj
+               bpy.ops.wm.append(filename=filename, directory=directory)
+                        
+           return{'FINISHED'}
        
        
 
-    
-    
+groundwood_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'wood', 'woods.blend') 
+class MATZOTGW__M1(bpy.types.Operator):
+       bl_idname = 'shader.gw1_operator'
+       bl_label =  'Assign Wood Ground Material'
+      
+       def execute(self, context):
+
+           section = "\\Material\\"
+                
+           objects = ["Wood Ground"] 
+        
+           directory = groundwood_file + section 
+        
+           for obj in objects:
+               filename = obj
+               bpy.ops.wm.append(filename=filename, directory=directory)
+                        
+           return{'FINISHED'}
+       
+       
 
 
+bm_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'allmetals', 'brushedmetal.blend') 
+class BRUSHEDMETAL_OT(bpy.types.Operator):
+       bl_idname = 'shader.bm_ot'
+       bl_label =  'Assign Brushed Metal Material'
+      
+       def execute(self, context):
 
-    
+           section = "\\Material\\"
+                
+           objects = ["Brushed metal"] 
+        
+           directory = bm_file + section 
+        
+           for obj in objects:
+               filename = obj
+               bpy.ops.wm.append(filename=filename, directory=directory)
+                        
+           return{'FINISHED'}
+       
+       
+
 
 
 def register():
+    import bpy.utils.previews 
+    pcoll = bpy.utils.previews.new()
+    my_icons_dir = os.path.join(os.path.dirname(__file__), "icons")
+    pcoll.load("my_icon", os.path.join(my_icons_dir, "discord.png"), 'IMAGE')
+    pcoll.load("logo", os.path.join(my_icons_dir, "eazymatz.png"), 'IMAGE')
+    preview_collections["main"] = pcoll
     bpy.utils.register_class(MainPanel)
     bpy.utils.register_class(MATZOTWOOD)
     bpy.utils.register_class(MATZOTOCEAN)
@@ -1353,9 +1470,7 @@ def register():
     bpy.utils.register_class(MATZOTASPHALTADVANCED)
     bpy.utils.register_class(MATZOTSPONGEBASIC)
     bpy.utils.register_class(MATZOTDENTEDMETAL)
-    bpy.utils.register_class(METALPANEL)
     bpy.utils.register_class(MATZOTFABRICSATIN)
-    bpy.utils.register_class(FABRICPANEL)
     bpy.utils.register_class(MATZOTFABRICSATIN2)
     bpy.utils.register_class(MATZOTFABRICUPHOLSTERY)
     bpy.utils.register_class(MATZOTFABRICUPHOLSTERY2)
@@ -1381,9 +1496,22 @@ def register():
     bpy.utils.register_class(MATZOTKEV)
     bpy.utils.register_class(MATZOTLEATH)
     bpy.utils.register_class(MATZOTGM)
+    bpy.utils.register_class(MATZOTMM__M1)
+    bpy.utils.register_class(MATZOTGW__M1)
+    bpy.utils.register_class(AddonPreferences)
+    bpy.utils.register_class(addon_prefs_ot)
+    bpy.utils.register_class(Props)
+    bpy.utils.register_class(BRUSHEDMETAL_OT)
+    bpy.types.Scene.my_tool = bpy.props.PointerProperty(type=Props)
 
 
+
+
+    
 def unregister():
+    for pcoll in preview_collections.values():
+        bpy.utils.previews.remove(pcoll)
+    preview_collections.clear()
     bpy.utils.unregister_class(MainPanel)
     bpy.utils.unregister_class(MATZOTWOOD)
     bpy.utils.unregister_class(MATZOTOCEAN)
@@ -1392,9 +1520,7 @@ def unregister():
     bpy.utils.unregister_class(MATZOTASPHALTADVANCED)
     bpy.utils.unregister_class(MATZOTSPONGEBASIC)
     bpy.utils.unregister_class(MATZOTDENTEDMETAL)
-    bpy.utils.unregister_class(METALPANEL)
     bpy.utils.unregister_class(MATZOTFABRICSATIN)
-    bpy.utils.unregister_class(FABRICPANEL)
     bpy.utils.unregister_class(MATZOTFABRICSATIN2)
     bpy.utils.unregister_class(MATZOTFABRICUPHOLSTERY)
     bpy.utils.unregister_class(MATZOTFABRICUPHOLSTERY2)
@@ -1419,8 +1545,18 @@ def unregister():
     bpy.utils.unregister_class(MATZOTKEV)
     bpy.utils.unregister_class(MATZOTLEATH)
     bpy.utils.unregister_class(MATZOTGM)
-  
-  
+    bpy.utils.unregister_class(MATZOTMM__M1)
+    bpy.utils.unregister_class(MATZOTGW__M1)
+    bpy.utils.unregister_class(AddonPreferences)
+    bpy.utils.unregister_class(addon_prefs_ot)
+    bpy.utils.unregister_class(Props)
+    bpy.utils.unregister_class(BRUSHEDMETAL_OT)
+    del bpy.types.Scene.my_tool
+
+
+
+
+
 
 if __name__ == "__main__":
     register()
